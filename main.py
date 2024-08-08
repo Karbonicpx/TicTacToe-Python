@@ -1,6 +1,8 @@
+from os import system
+
+
 inputs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] # Values that will be replaced by "X"or "O"
-
-
+gameEnd = False
 # Function that will show the visual part of the project
 def interface():
     
@@ -37,6 +39,54 @@ def player(name = "", pinput = ""):
         print("\n\n\n\n")
         interface()
 
+
+def checkvictory(userinput = "", pname = "", startindex = 1, endindex = 9, step = 1):
+
+    global gameEnd
+    inputcount = 0
+    for i in range(startindex, endindex, step):
+
+        if inputs[i] == userinput:
+            inputcount += 1
+
+            if inputcount == 3:
+                
+                print("\n== GAME FINISHED ==")
+                print(f"\nPlayer {pname} has won!")
+                gameEnd = True
+
+            
+
+
+def winpossibilities(pname = "", userinput = ""):
+
+    # Horizontal
+    checkvictory(userinput, pname, 1, 4)
+    checkvictory(userinput, pname, 4, 7)
+    checkvictory(userinput, pname, 7, 10)
+    
+    # Vertical
+    checkvictory(userinput, pname, 1, 8, 3)
+    checkvictory(userinput, pname, 2, 9, 3)
+    checkvictory(userinput, pname, 3, 10, 3)
+
+    # Diagonal
+    checkvictory(userinput, pname, 1, 10, 4)
+    checkvictory(userinput, pname, 3, 8, 2)
+
+    # Draw
+    inputcount = 0
+    for items in inputs:
+
+        if items == "X" or items == "O":
+            inputcount += 1
+    
+    if inputcount == 9:
+        print("\n== GAME FINISHED ==")
+        print(f"DRAW! No player won!")
+        global gameEnd
+        gameEnd = True
+    
 # Main function which will run the tictac-toe game
 def game():
 
@@ -44,8 +94,9 @@ def game():
     player2name = input("\nPlayer 2 name: ")
     p1input = "X"
     p2input = "O"
+    replay = ""
     player1turn = True
-    gameEnd = False
+    global gameEnd
 
     print("\n\n\n\n")
     interface()
@@ -58,19 +109,44 @@ def game():
         if player1turn == True:
 
             player(player1name, p1input)
+            winpossibilities(player1name, p1input)
             player1turn = False # Changing the turn to player 2
 
-        # In player 1 turn, will execute the behaviour of player 1
+        # In player 2 turn, will execute the behaviour of player 2
         else:
             player(player2name, p2input)
+            winpossibilities(player2name, p2input)
             player1turn = True # Changing the turn to player 1
 
+    while True:
         
+        replay = input("\nWanna play again? [Y/N]: ")
+        replay = replay.upper()
+
+        if replay == "Y":
+            global inputs
+            inputs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+            gameEnd = False
+            print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
+            game()
+            break
+        
+        elif replay == "N":
+            print("\nThanks for playing !")
+            break
+
+        else:
+            continue
+    
 
 
 # using \n so the application is not glued with the terminal codes
 print("\n")
 game()
-print("\n")
+print()
+
+
+
+
 
 
