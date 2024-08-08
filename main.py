@@ -1,8 +1,9 @@
-from os import system
+# TicTac-Toe, Started at 08/06/2024 and finished at 08/08/2024
 
+inputs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] # Values that will be replaced by "X" or "O"
+gameEnd = False # Global boolean that determines when a player wins or a draw happens
+notadraw = False # Global boolean that will only be used when a player wins at the last position, which will trigger the win and draw screens
 
-inputs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] # Values that will be replaced by "X"or "O"
-gameEnd = False
 # Function that will show the visual part of the project
 def interface():
     
@@ -17,33 +18,58 @@ def interface():
 
 
 # Function of player behaviour
-def player(name = "", pinput = ""):
+def player(name = "", pinput = ""): # Name parameter holds the player 1/2 name, and pinput defines if the player input is "X" or "O"
 
-        print(f"\n== PLAYER {name} TURN ==")
-        playerinput = int(input("\nType the position: ")) # Position in the grid which the player will change to "X" or "O"
+        print(f"\n== PLAYER {name} TURN ==") # Showing player name
+        while True:
+            try:
+                playerinput = int(input("\nType the position: ")) # Position in the grid which the player will change to "X" or "O"
 
-
+                # If the value is out of index, the program will make you type a new one in the range of 1 to 9
+                if playerinput > 9 or playerinput < 1:
+                    print("\n\n\n\n\n")
+                    interface()
+                    print("\nType a position in the range of 1-9.")
+                    continue
+                else:
+                    break
+            
+            # If the player types a value which is not an int, it will make you type a valid int value
+            except (ValueError):
+                print("\n\n\n\n\n")
+                interface()
+                print("\nThis position does not exist. Type a new position.")
+    
+            
         # Using while to avoid input errors
         while True:
 
-            # If the position which the player choose already has an O or X, the application will make him choose a new one
+            # If the position which the player choose already has an O or X, the program will make him choose a new one
             if inputs[playerinput] == "O" or inputs[playerinput] == "X":
                 print("\n\n\n\n\n")
                 interface()
                 print("\nPosition is already taken")
                 playerinput = int(input("\nType new position: "))
             else: 
-                inputs[playerinput] = pinput
+                inputs[playerinput] = pinput # assigning the position the player choose with his correspondent input (X or O)
                 break
 
         print("\n\n\n\n")
         interface()
 
 
+# Function that will serve as a template to read all possible outcomes for winning
 def checkvictory(userinput = "", pname = "", startindex = 1, endindex = 9, step = 1):
 
     global gameEnd
-    inputcount = 0
+    global notadraw
+    inputcount = 0 # Variable that will tell how many times X or O was found in the loop range
+
+
+    # A loop range which will be chosen it's startindex, endindex and step, so it can read a specified sequence
+    # Example if you choose 1 as the startindex, 4 as the endindex, and step as 1, it will read the 1 2 3 horizontal line
+    # Then, if it finds 3 identical userinputs (3 Xs or 3 Os), it determines as a win for the player that hit this sequence, and ends the game
+    # If not, then it just go to the next turn
     for i in range(startindex, endindex, step):
 
         if inputs[i] == userinput:
@@ -54,34 +80,38 @@ def checkvictory(userinput = "", pname = "", startindex = 1, endindex = 9, step 
                 print("\n== GAME FINISHED ==")
                 print(f"\nPlayer {pname} has won!")
                 gameEnd = True
+                notadraw = True
 
             
 
 
+# A function that will read all possible sequences that determines as a win in tictactoe
 def winpossibilities(pname = "", userinput = ""):
 
+    global notadraw
+
     # Horizontal
-    checkvictory(userinput, pname, 1, 4)
-    checkvictory(userinput, pname, 4, 7)
-    checkvictory(userinput, pname, 7, 10)
+    checkvictory(userinput, pname, 1, 4) # 1 2 3
+    checkvictory(userinput, pname, 4, 7) # 3 5 6
+    checkvictory(userinput, pname, 7, 10) # 7 8 9
     
     # Vertical
-    checkvictory(userinput, pname, 1, 8, 3)
-    checkvictory(userinput, pname, 2, 9, 3)
-    checkvictory(userinput, pname, 3, 10, 3)
+    checkvictory(userinput, pname, 1, 8, 3) # 1 4 7
+    checkvictory(userinput, pname, 2, 9, 3) # 2 5 8
+    checkvictory(userinput, pname, 3, 10, 3) # 3 6 9
 
     # Diagonal
-    checkvictory(userinput, pname, 1, 10, 4)
-    checkvictory(userinput, pname, 3, 8, 2)
+    checkvictory(userinput, pname, 1, 10, 4) # 1 5 9
+    checkvictory(userinput, pname, 3, 8, 2) # 3 5 7
 
-    # Draw
+    # The code belows makes the game end as a draw when all the values in the grid are Xs or Os
     inputcount = 0
     for items in inputs:
 
         if items == "X" or items == "O":
             inputcount += 1
     
-    if inputcount == 9:
+    if inputcount == 9 and notadraw == False:
         print("\n== GAME FINISHED ==")
         print(f"DRAW! No player won!")
         global gameEnd
@@ -118,11 +148,13 @@ def game():
             winpossibilities(player2name, p2input)
             player1turn = True # Changing the turn to player 1
 
+    # This loop will make the player choose if he wants to continue playing or wants to end the session
     while True:
         
         replay = input("\nWanna play again? [Y/N]: ")
         replay = replay.upper()
 
+        # If player responds with a YES, all the values are resetted and the game restarts
         if replay == "Y":
             global inputs
             inputs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -131,10 +163,12 @@ def game():
             game()
             break
         
+        # If the player responds with NO, the game ends and the application closes
         elif replay == "N":
             print("\nThanks for playing !")
             break
-
+        
+        # If the player responded with anything different, it will make him choose again between Y or N.
         else:
             continue
     
