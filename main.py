@@ -27,7 +27,7 @@ def player(name = "", pinput = ""): # Name parameter holds the player 1/2 name, 
 
                 # If the value is out of index, the program will make you type a new one in the range of 1 to 9
                 if playerinput > 9 or playerinput < 1:
-                    print("\n\n\n\n\n")
+                    print("\n" * 500)
                     interface()
                     print("\nType a position in the range of 1-9.")
                     continue
@@ -36,7 +36,7 @@ def player(name = "", pinput = ""): # Name parameter holds the player 1/2 name, 
             
             # If the player types a value which is not an int, it will make you type a valid int value
             except (ValueError):
-                print("\n\n\n\n\n")
+                print("\n" * 500)
                 interface()
                 print("\nThis position does not exist. Type a new position.")
     
@@ -46,7 +46,7 @@ def player(name = "", pinput = ""): # Name parameter holds the player 1/2 name, 
 
             # If the position which the player choose already has an O or X, the program will make him choose a new one
             if inputs[playerinput] == "O" or inputs[playerinput] == "X":
-                print("\n\n\n\n\n")
+                print("\n" * 500)
                 interface()
                 print("\nPosition is already taken")
                 playerinput = int(input("\nType new position: "))
@@ -54,7 +54,7 @@ def player(name = "", pinput = ""): # Name parameter holds the player 1/2 name, 
                 inputs[playerinput] = pinput # assigning the position the player choose with his correspondent input (X or O)
                 break
 
-        print("\n\n\n\n")
+        print("\n" * 500)
         interface()
 
 
@@ -128,7 +128,7 @@ def game():
     player1turn = True
     global gameEnd
 
-    print("\n\n\n\n")
+    print("\n" * 500)
     interface()
     
 
@@ -159,7 +159,7 @@ def game():
             global inputs
             inputs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
             gameEnd = False
-            print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
+            print("\n" * 500)
             game()
             break
         
