@@ -6,7 +6,7 @@ from tabulate import tabulate
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    passwd='Nicolas@',
+    passwd='1234',
     database='ranking'
 ); # Acessing mysql server
 
